@@ -1,15 +1,9 @@
 {
   "name": "phantom",
-  "version": "1.0.0",
+  "productName": "Phantom",
   "description": "Web App for phantom minecraft server proxy.",
-  "main": "phantom-GUI.js",
-  "bin": "phantom-GUI.js",
-  "directories": {
-    "lib": "lib"
-  },
-  "files": [
-    "lib"
-  ],
+  "main": "./main.js",
+  "version": "1.0.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/OliverBrotchie/phantom.git"
@@ -24,12 +18,21 @@
     "url": "https://github.com/OliverBrotchie/phantom/issues"
   },
   "homepage": "https://github.com/OliverBrotchie/phantom#readme",
-  "dependencies": {
-    "express": "^4.17.1",
-    "open": "^7.0.3",
-    "pkg": "^4.4.4"
+  "scripts": {
+    "start": "electron ."
   },
-  "pkg": {
-    "assets": "lib"
+  "directories": {
+    "lib": "lib"
+  },
+  "files": [
+    "lib"
+  ],
+  "dependencies": {
+    "express": "*",
+    "body-parser": "*",
+    "open": "*"
+  },
+  "devDependencies": {
+    "electron": "^9.0.0-beta.6"
   }
 }

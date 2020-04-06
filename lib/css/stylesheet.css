@@ -3,13 +3,29 @@
   background: #5B8499;
   z-index: 500; }
 
+.brand-logo {
+  height: 60px;
+  line-height: 57px;
+  font-weight: 500; }
+
 nav {
-  height: 70px; }
-  nav a {
-    height: 70px;
-    font-weight: 500; }
-  nav i {
-    padding-top: 2px; }
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-app-region: drag;
+  height: 60px; }
+  nav li a {
+    height: 60px;
+    line-height: 40px;
+    -webkit-app-region: no-drag; }
+    nav li a i {
+      font-size: 20px !important; }
+  nav img {
+    width: 40px;
+    margin: 10px 25px; }
 
 html, body {
   height: 100vh;
@@ -32,8 +48,7 @@ html, body {
   @media only screen and (min-width: 601px) {
     #interface {
       width: 600px;
-      margin: 30px auto;
-      max-height: calc(100vh - 130px); } }
+      margin: 30px auto; } }
   @media only screen and (min-width: 992px) {
     #interface {
       width: 900px;

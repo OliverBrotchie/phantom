@@ -3,23 +3,46 @@
 $PC: #5B8499;
 $SC: #19242A;
 
+@mixin noSelect {
+	text-decoration: none;
+	-webkit-tap-highlight-color: transparent;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
 .nav-wrapper{
 	background: $PC;
 	z-index: 500;
 }
 
+.brand-logo{
+	height: 60px;
+	line-height:57px;
+	font-weight: 500;
+}
+
 nav {
-	
-	height: 70px;
-	
-	a {
-		height: 70px;
-		
-		font-weight: 500;
+	@include noSelect;
+	-webkit-app-region: drag;
+	height: 60px;
+
+	li {
+
+		a {
+			height:60px;
+			line-height:40px;
+			-webkit-app-region: no-drag;
+			i {
+				font-size:20px !important;
+			}
+		}
 	}
 
-	i {
-		padding-top:2px;
+	img{
+		width:40px;
+		margin:10px 25px;
 	}
 	
 }
@@ -28,7 +51,6 @@ html,body {
 	height: 100vh;
 	margin: 0;
 	background-color:#fff;
-
 }
 
 .host{
@@ -51,7 +73,6 @@ html,body {
 	@media only screen and (min-width : 601px) {
 		width: 600px;
 		margin:30px auto;
-		max-height:calc(100vh - 130px);
 	}
 	
 	@media only screen and (min-width : 992px) {
