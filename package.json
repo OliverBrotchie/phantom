@@ -28,9 +28,7 @@
     "lib"
   ],
   "dependencies": {
-    "express": "*",
-    "body-parser": "*",
-    "open": "*"
+    "node-go-require": "^1.1.5"
   },
   "devDependencies": {
     "electron": "^9.0.0-beta.6"

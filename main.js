@@ -1,11 +1,18 @@
-// Graphical user interface for phantom for people who are less technically skilled
-//  
-// The front end code is at lib/js/indexjs
-// I have used my own front end library (Interface.js) to create the console
-//
-// Lib and phantom exe are intended to be included in the same file when running phantom-GUI
+// Graphical user interface for phantom
+require('node-go-require');
+const Phantom = require(__dirname + '/source/cmd/phantom.go').phantom;
+const {app, BrowserWindow, ipcMain} = require('electron');
 
-const { app, BrowserWindow } = require('electron')
+var params = {
+	server:null,
+	boundIP:null,
+	boundPort:null,
+	timeOut:null
+},
+running = false,
+history = [],
+p = null;
+
 
 function createWindow () {
   // Create the browser window.
@@ -34,7 +41,7 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit()
   }
-})
+});
 
 app.on('activate', () => {
   // On macOS it's common to re-create a window in the app when the
@@ -42,50 +49,19 @@ app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) {
     createWindow()
   }
-})
-
-
-
-
-/*
-var express = require('express');
-var bodyParser = require('body-parser');
-var childProcess = require('child_process');
-var open = require('open');
-var app = express();
-
-var params = {
-	server:null,
-	boundIP:null,
-	boundPort:null,
-	timeOut:null
-},
-running = false,
-phantom = null,
-history = [];
-
-
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(bodyParser.json())
-
-
-var router = express.Router();
-
-//Handles the get requests from the web page
-router.get('/', function(req, res) {
-    res.json({params:params,history:history,running:running});   
 });
 
-//Handles the post request from the web page
-router.post('/',function(request,response){
+ipcMain.on('asynchronous-message', (event, data) => {
+	console.log('async message recieved');
+  
+    // send message to index.html
+    event.sender.send('asynchronous-reply', 'async message recieved' );
 
-    response.send(request.body);
-      
-    if(request.body.parameters != params){   
-        params = request.body.parameters;
+    if(data.parameters != params){   
+        params = data.parameters;
     }
 
-    switch(request.body.command){
+    switch(data.command){
         case 'start':
             start();
         break;
@@ -95,22 +71,9 @@ router.post('/',function(request,response){
         case 'restart':
             restart();
         break;
-        case 'close':
-            close();
-        break
     }
 });
 
-//Starts the server and api
-app.use('/', express.static('lib'))
-app.use('/api', router);
-app.listen(555);
-console.log('\n Starting api on port 555 \n');
-
-(async () => {
-    // Opens the url in the default browser
-    await open('http://localhost:'+555);
-})();
 
 //Starts phantom
 function start(){
@@ -120,56 +83,55 @@ function start(){
         history.push('Starting phantom...')
         running = true;
 
-        //get the correct os
-        var os;
-        switch(process.platform){
-            case 'win32':
-                os = 'windows.exe';
-            break;
-            case 'darwin':
-                os = 'macos';
-            break;
-            case 'linux':
-                os = 'linux'
-            break;
-        }
+        //Defualts: RemoteServer "", BindAddress = "0.0.0.0", BindPort = 0 IdleTimeout = 60 (time.duration)
+
 
         //determine which parameters have been set by user
-        var args = ['-server',params.server];
+        var args = [params.server];
 
         if(params.boundIP != null){
-            args.push('-bind');
             args.push(params.boundIP);
+        } else {
+            args.push("0.0.0.0");
         }
 
         if(params.boundPort != null){
-            args.push('-bind_port');
             args.push(params.boundPort);
+        } else {
+            args.push(0);
         }
 
         if(params.timeOut != null){
-            args.push('-timeout');
-            args.push(params.timeOut);
+           args.push(params.timeOut);
+        } else {
+            args.push(60);
         }
 
-        //Launches phantom as a child process
-        phantom = childProcess.execFile('phantom-' + os,args);
+        p = Phantom.new(...args);
 
-        phantom.stderr.on('data', function(data) {
-            history.push(data);
-            console.log(data);
-        });
-
-        phantom.stdout.on('data', function(data) {
-            history.push(data);
-            console.log(data);
-        });
         
-        phantom.on('close', function(code) {
-            history.push('Phantom stopped.')
-            console.log('Phantom closed.');
-            running = false;
-        });
+
+        // //Launches phantom as a child process
+        // phantom = childProcess.execFile('phantom-' + os,args);
+
+        // phantom.stderr.on('data', function(data) {
+        //     history.push(data);
+        //     console.log(data);
+        //     event.sender.send('asynchronous-message', {parameters:params,running:runnig,history:history});
+        // });
+
+        // phantom.stdout.on('data', function(data) {
+        //     history.push(data);
+        //     console.log(data);
+        //     event.sender.send('asynchronous-message', {parameters:params,running:runnig,history:history});
+        // });
+        
+        // phantom.on('close', function(code) {
+        //     history.push('Phantom stopped.')
+        //     console.log('Phantom stopped.');
+        //     running = false;
+        //     event.sender.send('asynchronous-message', {parameters:params,running:runnig,history:history});
+        // });
     }
 }
 
@@ -191,16 +153,3 @@ function restart(){
         start();
     }
 }
-
-//Closes the GUI
-function close(){
-    if(running){
-        stop();
-
-        setTimeout(()=>{
-            close()
-        }, 1000);
-    } else {
-        process.exit();
-    }
-} */
