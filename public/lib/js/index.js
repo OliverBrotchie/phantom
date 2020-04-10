@@ -1,11 +1,25 @@
+//The front end code for the web app
+
+
 const electron = require('electron');
-var {ipcRenderer} = electron;
+var {ipcRenderer} = electron,
+params = {
+	server:null,
+	boundIP:null,
+	boundPort:null,
+	timeOut:null
+}, running = false, phantomHistory = [];
+
 
 ipcRenderer.on('asynchronous-message', (event, data) => {
-	console.log('Event: ' + event + ' Data: ' + data);
+	console.log(data);
+	running = data.running;
 	output(data.history);
 });
 
+
+
+//Window action buttons
 document.getElementById("min-btn").addEventListener("click", function (e) {
 	var window = electron.remote.getCurrentWindow();
 	window.minimize(); 
@@ -25,17 +39,11 @@ document.getElementById("close-btn").addEventListener("click", function (e) {
 	window.close();
 }); 
 
-//The front end code for the web app
-var params = {
-	server:null,
-	boundIP:null,
-	boundPort:null,
-	timeOut:null
-}, running = false,phantomHistory = [],
+
 
 
 //An instanciation of Interface.js
-c = new Interface(document.getElementById('interface').firstElementChild,m => {},{
+var c = new Interface(document.getElementById('interface').firstElementChild,m => {},{
 
 	messageOptions: {
 		striped:true,

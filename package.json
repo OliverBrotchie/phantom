@@ -1,8 +1,8 @@
 {
   "name": "phantom",
   "productName": "Phantom",
-  "description": "Web App for phantom minecraft server proxy.",
-  "main": "./main.js",
+  "description": "Play any Minecraft server on your Xbox or PS4!",
+  "main": "./public/main.js",
   "version": "1.0.0",
   "repository": {
     "type": "git",
@@ -19,18 +19,62 @@
   },
   "homepage": "https://github.com/OliverBrotchie/phantom#readme",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
   },
-  "directories": {
-    "lib": "lib"
-  },
-  "files": [
-    "lib"
-  ],
   "dependencies": {
-    "node-go-require": "^1.1.5"
+    "path": "^0.12.7"
   },
   "devDependencies": {
-    "electron": "^9.0.0-beta.6"
-  }
+    "electron": "^9.0.0-beta.15",
+    "electron-builder": "^22.4.1"
+  },
+  "build": {
+    "appId": "com.oliverbrotchie.phantom",
+    "dmg": {
+      "contents": [
+        {
+          "x": 130,
+          "y": 220
+        },
+        {
+          "x": 410,
+          "y": 220,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "build/icon.ico"
+    },
+    "linux": {
+      "target": [
+        "deb",
+        "rpm",
+        "snap",
+        "AppImage"
+      ],
+      "icon": "build/icon.png",
+      "category": "Development"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "build/icon.png",
+      "category": "public.app-category.developer-tools"
+    },
+    "directories": {
+      "buildResources": "resources",
+      "output": "release"
+    }
+  },
+  "files": [
+    "build/**/*",
+    "public/**/*",
+    "node_modules/**/*"
+  ]
 }

@@ -6,7 +6,6 @@ import (
 	"net"
 	"time"
 
-	"github.com/gopherjs/gopherjs/js"
 	"github.com/jhead/phantom/internal/clientmap"
 	"github.com/jhead/phantom/internal/logging"
 	"github.com/jhead/phantom/internal/proto"
@@ -37,15 +36,7 @@ type ProxyPrefs struct {
 	IdleTimeout  time.Duration
 }
 
-//FIND CORRECT DATA TYPE
-func New(BindAddress string, BindPort uint16, RemoteServer string, IdleTimeout time.Duration) *js.Object {
-
-	var prefs = new(ProxyPrefs)
-	prefs.BindAddress = BindAddress
-	prefs.BindPort = BindPort
-	prefs.RemoteServer = RemoteServer
-	prefs.IdleTimeout = time.Duration(IdleTimeout) * time.Second
-
+func New(prefs ProxyPrefs) (*ProxyServer, error) {
 	bindPort := prefs.BindPort
 
 	// Randomize port if not provided
@@ -59,23 +50,23 @@ func New(BindAddress string, BindPort uint16, RemoteServer string, IdleTimeout t
 
 	bindAddress, err := net.ResolveUDPAddr("udp", prefs.BindAddress)
 	if err != nil {
-		return nil
+		return nil, fmt.Errorf("Invalid bind address: %s", err)
 	}
 
 	remoteServerAddress, err := net.ResolveUDPAddr("udp", prefs.RemoteServer)
 	if err != nil {
-		return nil
+		return nil, fmt.Errorf("Invalid server address: %s", err)
 	}
 
-	return js.MakeWrapper(&ProxyServer{
+	return &ProxyServer{
 		bindAddress,
 		remoteServerAddress,
 		nil,
 		nil,
 		clientmap.New(prefs.IdleTimeout, idleCheckInterval),
-		*prefs,
+		prefs,
 		abool.New(),
-	})
+	}, nil
 }
 
 func (proxy *ProxyServer) Start() error {
