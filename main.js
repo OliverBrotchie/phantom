@@ -83,6 +83,9 @@ function start(){
         history.push('Starting phantom...')
         running = true;
 
+        //Defualts: RemoteServer "", BindAddress = "0.0.0.0", BindPort = 0 IdleTimeout = 60 (time.duration)
+
+
         //determine which parameters have been set by user
         var args = [params.server];
 
@@ -107,24 +110,46 @@ function start(){
         p = Phantom.new(...args);
 
         
+
+        // //Launches phantom as a child process
+        // phantom = childProcess.execFile('phantom-' + os,args);
+
+        // phantom.stderr.on('data', function(data) {
+        //     history.push(data);
+        //     console.log(data);
+        //     event.sender.send('asynchronous-message', {parameters:params,running:runnig,history:history});
+        // });
+
+        // phantom.stdout.on('data', function(data) {
+        //     history.push(data);
+        //     console.log(data);
+        //     event.sender.send('asynchronous-message', {parameters:params,running:runnig,history:history});
+        // });
+        
+        // phantom.on('close', function(code) {
+        //     history.push('Phantom stopped.')
+        //     console.log('Phantom stopped.');
+        //     running = false;
+        //     event.sender.send('asynchronous-message', {parameters:params,running:runnig,history:history});
+        // });
     }
 }
 
-// //Stops phantom
-// function stop(){
-//     if(phantom != null){
-//         phantom.kill();
-//     }
-// }
+//Stops phantom
+function stop(){
+    if(phantom != null){
+        phantom.kill();
+    }
+}
 
-// //Restarts Phantom
-// function restart(){
-//     if(running){
-//         stop();
-//         setTimeout(()=>{
-//             restart()
-//         }, 1000);
-//     } else {
-//         start();
-//     }
-// }
+//Restarts Phantom
+function restart(){
+    if(running){
+        stop();
+        setTimeout(()=>{
+            restart()
+        }, 1000);
+    } else {
+        start();
+    }
+}
