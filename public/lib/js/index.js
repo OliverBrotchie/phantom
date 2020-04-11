@@ -12,7 +12,9 @@ params = {
 
 
 ipcRenderer.on('asynchronous-message', (event, data) => {
-	console.log(data);
+	if(data.permissions == false){
+		this.out(new Message({text:"Please give phantom run permissions by entering password in popup menu before trying to start phantom. You will only need to do this once..." + time,tag:"Console"}));
+	}
 	running = data.running;
 	output(data.history);
 });

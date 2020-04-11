@@ -3,6 +3,7 @@ const childProcess = require('child_process');
 const {app, BrowserWindow, ipcMain} = require('electron');
 const path = require('path');
 const fs = require('fs');
+const sudo = require('sudo-prompt');
 
 var params = {
 	server:null,
@@ -12,8 +13,9 @@ var params = {
 },
 win = null,
 running = false,
-history = [],
-phantom = null;
+phantom = null,
+permissions = null,
+history = [];
 
 
 function createWindow () {
@@ -22,7 +24,7 @@ function createWindow () {
         width: 800,
         height: 600,
         frame: false,
-        icon: path.join(__dirname, '/lib/favicon/icon.png'),
+        icon: path.join(__dirname, 'lib/favicon/icon.png'),
         webPreferences: {
             nodeIntegration: true
         }
@@ -30,7 +32,7 @@ function createWindow () {
     
     // and load the index.html of the app.
     win.show();
-    win.loadFile(path.join(__dirname, '/index.html'));
+    win.loadFile(path.join(__dirname, 'index.html'));
 }
 
 app.whenReady().then(createWindow)
@@ -83,91 +85,107 @@ ipcMain.on('asynchronous-message', (event, data) => {
     }
 });
 
+var os;
+
+switch(process.platform){
+    case 'win32':
+        os = 'windows.exe';
+    break;
+    case 'darwin':
+        os = 'macos';
+    break;
+    case 'linux':
+        os = 'linux'
+    break;
+}
+
+var p = path.join(__dirname, 'bin/phantom-' + os)
+
+if(os == 'linux' || os == 'macos'){
+
+    permissions = false;
+    getPermissions();
+    
+} else permissions = true;
+
+function getPermissions(){
+    try{
+
+        fs.accessSync(p, fs.constants.X_OK);
+        permissions = true;
+        
+    } catch(err) {
+        sudo.exec('chmod +x ' + p, {name: 'Electron'},
+            function(error, stdout, stderr) {
+                if (error) throw error;
+                permissions = true;
+                console.log('stdout: ' + stdout);
+            }
+        )
+    }
+}
 
 //Starts phantom
 function start(){
-    if(running != true){
+    if(permissions == true){
+        if(running != true){
         
-        console.log('\n Starting phantom... \n');
-        history.push('Starting phantom...')
-        running = true;
-
-
-        //get the correct os
-        var os;
-        switch(process.platform){
-            case 'win32':
-                os = 'windows.exe';
-            break;
-            case 'darwin':
-                os = 'macos';
-            break;
-            case 'linux':
-                os = 'linux'
-            break;
-        }
-
-
-        var p = path.join(process.resourcesPath, 'app/public/bin/phantom-' + os)
-
-        if(os == 'linux' || os == 'macos'){
-
-            try{
-                fs.chmodSync(p, 0o5)
-            } catch(err){
-                throw err;
+            console.log('\n Starting phantom... \n');
+            history.push('Starting phantom...')
+            running = true;
+    
+            //determine which parameters have been set by user
+            var args = ['-server',params.server];
+    
+    
+            if(params.boundIP != null){
+                args.push('-bind');
+                args.push(params.boundIP);
             }
+    
+            if(params.boundPort != null){
+                args.push('-bind_port');
+                args.push(params.boundPort);
+            }
+    
+            if(params.timeOut != null){
+                args.push('-timeout');
+                args.push(params.timeOut);
+            }
+    
+            //Launches phantom as a child process
+        
+            phantom = childProcess.execFile(p,args);
+    
+            phantom.stderr.on('data', function(data) {
+                history.push(data);
+                console.log(data);
+                win.webContents.send('asynchronous-message', {parameters:params,running:running,history:history});
+            });
+    
+            phantom.stdout.on('data', function(data) {
+                history.push(data);
+                console.log(data);
+                win.webContents.send('asynchronous-message', {parameters:params,running:running,history:history});
+            });
+            
+            phantom.on('close', function(code) {
+                history.push('Phantom stopped.')
+                console.log('Phantom stopped.');
+                win.webContents.send('asynchronous-message', {parameters:params,running:running,history:history});
+                running = false;
+            });
+    
+            phantom.on('error',function(err) {
+                throw(err);
+            });
             
         }
-
-
-        //determine which parameters have been set by user
-        var args = ['-server',params.server];
-
-
-        if(params.boundIP != null){
-            args.push('-bind');
-            args.push(params.boundIP);
-        }
-
-        if(params.boundPort != null){
-            args.push('-bind_port');
-            args.push(params.boundPort);
-        }
-
-        if(params.timeOut != null){
-            args.push('-timeout');
-            args.push(params.timeOut);
-        }
-
-        //Launches phantom as a child process
-    
-        phantom = childProcess.execFile(p,args);
-
-        phantom.stderr.on('data', function(data) {
-            history.push(data);
-            console.log(data);
-            win.webContents.send('asynchronous-message', {parameters:params,running:running,history:history});
-        });
-
-        phantom.stdout.on('data', function(data) {
-            history.push(data);
-            console.log(data);
-            win.webContents.send('asynchronous-message', {parameters:params,running:running,history:history});
-        });
-        
-        phantom.on('close', function(code) {
-            history.push('Phantom stopped.')
-            console.log('Phantom stopped.');
-            win.webContents.send('asynchronous-message', {parameters:params,running:running,history:history,code:code});
-            running = false;
-        });
-
-        phantom.on('error',function(err) {
-            throw(err);
-        });
-        
+    } else {
+        win.webContents.send('asynchronous-message', {parameters:params,running:running,history:history,permissions:false});
+        getPermissions();
     }
+    
 }
 
 //Stops phantom

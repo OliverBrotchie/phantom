@@ -25,7 +25,8 @@
   },
   "dependencies": {
     "fs": "0.0.1-security",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "sudo-prompt": "^9.1.1"
   },
   "devDependencies": {
     "electron": "^9.0.0-beta.15",
@@ -72,13 +73,13 @@
       "buildResources": "resources",
       "output": "release"
     },
-    "extraResources": [
+    "asarUnpack":[
+      "app/public/**",
       "app/public/bin",
       "app/public/bin/phantom-macos",
       "app/public/bin/phantom-linux",
       "app/public/bin/phantom-windows.exe"
-    ],
-    "asar": false
+    ]
   },
   "files": [
     "build/**/*",
