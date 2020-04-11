@@ -19,7 +19,7 @@ https://github.com/jhead/phantom
 
 Just use the correct installer for your operating system and enjoy!
 
-If you are stuck, either type -help or for greater detail look at: https://github.com/jhead/phantom
+If you are stuck, use -help.
 
 ## Running multiple instances
 
