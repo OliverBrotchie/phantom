@@ -24,6 +24,7 @@
     "dist": "electron-builder"
   },
   "dependencies": {
+    "fs": "0.0.1-security",
     "path": "^0.12.7"
   },
   "devDependencies": {
@@ -70,7 +71,14 @@
     "directories": {
       "buildResources": "resources",
       "output": "release"
-    }
+    },
+    "extraResources": [
+      "app/public/bin",
+      "app/public/bin/phantom-macos",
+      "app/public/bin/phantom-linux",
+      "app/public/bin/phantom-windows.exe"
+    ],
+    "asar": false
   },
   "files": [
     "build/**/*",

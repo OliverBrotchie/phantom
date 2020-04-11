@@ -2,6 +2,7 @@
 const childProcess = require('child_process');
 const {app, BrowserWindow, ipcMain} = require('electron');
 const path = require('path');
+const fs = require('fs');
 
 var params = {
 	server:null,
@@ -28,8 +29,8 @@ function createWindow () {
     });
     
     // and load the index.html of the app.
-    win.loadFile(path.join(__dirname, '/index.html'));
     win.show();
+    win.loadFile(path.join(__dirname, '/index.html'));
 }
 
 app.whenReady().then(createWindow)
@@ -106,12 +107,17 @@ function start(){
             break;
         }
 
+
+        var p = path.join(process.resourcesPath, 'app/public/bin/phantom-' + os)
+
         if(os == 'linux' || os == 'macos'){
 
-            fs.chmod(path.join(__dirname, '/bin/phantom-' + os), 0o1, (err) => {
-                if (err) throw err;
-            });
-
+            try{
+                fs.chmodSync(p, 0o5)
+            } catch(err){
+                throw err;
+            }
+            
         }
 
 
@@ -135,7 +141,8 @@ function start(){
         }
 
         //Launches phantom as a child process
-        phantom = childProcess.execFile(path.join(__dirname, '/bin/phantom-' + os),args);
+    
+        phantom = childProcess.execFile(p,args);
 
         phantom.stderr.on('data', function(data) {
             history.push(data);
@@ -155,6 +162,11 @@ function start(){
             win.webContents.send('asynchronous-message', {parameters:params,running:running,history:history,code:code});
             running = false;
         });
+
+        phantom.on('error',function(err) {
+            throw(err);
+        });
+        
     }
 }
 
