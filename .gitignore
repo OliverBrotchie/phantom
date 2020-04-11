@@ -2,3 +2,4 @@ node_modules
 out
 release
 resources
+.DS_Store
