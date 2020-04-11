@@ -50,4 +50,4 @@ You almost definitely need to create a firewall rule for this to work.
 On macOS, you'll be prompted automatically. On Windows, you may need to go into
 your Windows Firewall settings and open up all UDP ports for phantom.
 
-Again look at https://github.com/jhead/phantom for support on how to do that..
+Again look at https://github.com/jhead/phantom for support on how to do that...
