@@ -17,6 +17,8 @@ https://github.com/jhead/phantom
 
 ## Usage
 
+Just use the correct installer for your operating system and enjoy!
+
 **Running multiple instances**
 
 I recommend running the original command line version instead: https://github.com/jhead/phantom
