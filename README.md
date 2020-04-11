@@ -8,107 +8,18 @@ You can now play on remote servers (not Realms!) on your Xbox and PS4 with frien
 
 It's like having a LAN server that's not actually there, spooky.
 
+This is a graphical user interface for jhead's orignal command line application:
+https://github.com/jhead/phantom
+
 ## Installing
 
-phantom is a command line application with no GUI (yet). See the usage section below.
-
-[Download](https://github.com/jhead/phantom/releases) phantom from the releases page.
-
-**macOS / Linux**
-
-Add execute permissions if necessary:
-
-```bash
-$ chmod u+x ./phantom-<os>
-```
-
-Just replace `<os>` with macos, linux, etc. for the correct OS you're using.
+[Download](https://github.com/OliverBrotchie/phantom/releases) phantom from the releases page.
 
 ## Usage
 
-Open up a command prompt (Windows) or terminal (macOS & Linux) to the location
-where you downloaded it, then the server should show up on your LAN list within
-a few seconds. If not, you did something wrong. Or I did ;)
-
-```
-Usage: ./phantom-<os> [options] -server <server-ip>
-
-Options:
-  -bind string
-    	Optional: IP address to listen on. Defaults to all interfaces. (default "0.0.0.0")
-  -bind_port int
-    	Optional: Port to listen on. Defaults to 0, which selects a random port.
-    	Note that phantom always binds to port 19132 as well, so both ports need to be open.
-  -server string
-    	Required: Bedrock/MCPE server IP address and port (ex: 1.2.3.4:19132)
-  -timeout int
-    	Optional: Seconds to wait before cleaning up a disconnected client (default 60)
-```
-
 **Running multiple instances**
 
-If you have multiple Bedrock servers, you can run phantom multiple times on
-the same device to allow all of your servers to show up on the LAN list. All
-you have to do is start one instance of phantom for each server and set the
-`-server` flag appropriately. You don't need to use `-bind` or change the port.
-But you probably do need to make sure you have a firewall rule that allows
-all UDP traffic for the phantom executable.
-
-**A note on `-bind`:**
-
-The port is randomized by default and specifically omitted from the flag because
-the port that phantom runs on is irrelevant to the user. phantom must bind to
-port 19132 on all interfaces (or at least the broadcast address) to receive
-ping packets from LAN devices. So phantom will always do that and there's no
-way to configure otherwise, but you can also pick which IP you want the proxy
-itself to listen on, just in case you need that. You shouldn't though.
-
-As long as the device you run phantom from is on the same LAN, the default
-settings should allow other LAN devices to see it when you open Minecraft.
-
-**A note on `-bind_port`:**
-
-The port used by the proxy server can be defined with the `-bind_port` flag.
-It can be useful if you are behind a firewall or using Docker and want to open only
-necessary ports to phantom. Note that you'll always need to open port 19132 in addition
-to the bind port for phantom to work.
-
-This flag can be used with or without the `-bind` flag. 
-Default value is 0, which means a random port will be used.
-
-**Example**
-
-Connect to a server at IP `lax.mcbr.cubed.host` port `19132`:
-
-```bash
-$ ./phantom-<os> -server lax.mcbr.cubed.host:19132
-```
-
-Same as above but bind to a specific local IP:
-
-```bash
-$ ./phantom-<os> -bind 10.0.0.5 -server lax.mcbr.cubed.host:19132
-```
-
-Same as above but bind the proxy server to port 19133:
-   
-```bash
-$ ./phantom-<os> -bind_port 19133 -server lax.mcbr.cubed.host:19132
-```
-
-Same as above but bind the proxy server to local IP 10.0.0.5 and port 19133:
-   
-```bash
-$ ./phantom-<os> -bind 10.0.0.5 -bind_port 19133 -server lax.mcbr.cubed.host:19132
-```
-
-## Building
-
-Makefile builds for Windows, macOS, and Linux, including x86 and ARM.
-
-```bash
-make
-```
+I recommend running the original command line version instead: https://github.com/jhead/phantom
 
 ## How does this work?
 
@@ -130,7 +41,6 @@ computer, a VM, or even with a Minecraft hosting service.
 ## Supported platforms
 
 - This tool should work on Windows, macOS, and Linux.
-- ARM builds are available for Raspberry Pi and similar SOCs.
 - Minecraft for Windows 10, iOS/Android, Xbox One, and PS4 are currently supported.
 - **Nintendo Switch is not supported.**
 
