@@ -15,6 +15,8 @@ https://github.com/jhead/phantom
 
 [Download](https://github.com/OliverBrotchie/phantom/releases) phantom from the releases page.
 
+Also available for Linux on the snapstore at: https://snapcraft.io/phantom
+
 ## Usage
 
 Just use the correct installer for your operating system and enjoy!
