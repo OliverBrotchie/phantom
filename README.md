@@ -1,4 +1,4 @@
-[![Downloads](https://img.shields.io/github/downloads/OliverBrotchie/phantom/total)](https://github.com/OliverBrotchie/phantom/releases) [![Gitter](https://badges.gitter.im/phantom-minecraft/community.svg)](https://gitter.im/phantom-minecraft/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge) [![License](https://img.shields.io/github/license/OliverBrotchie/phantom)](https://opensource.org/licenses/MIT) [![Stars](https://img.shields.io/github/stars/OliverBrotchie/phantom)]
+[![Downloads](https://img.shields.io/github/downloads/OliverBrotchie/phantom/total)](https://github.com/OliverBrotchie/phantom/releases) [![Gitter](https://badges.gitter.im/phantom-minecraft/community.svg)](https://gitter.im/phantom-minecraft/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge) [![License](https://img.shields.io/github/license/OliverBrotchie/phantom)](https://opensource.org/licenses/MIT) [Stars](https://img.shields.io/github/stars/OliverBrotchie/phantom)
 
 # phantom
 
