@@ -56,8 +56,6 @@
     },
     "linux": {
       "target": [
-        "deb",
-        "rpm",
         "snap",
         "AppImage"
       ],
@@ -73,7 +71,7 @@
       "buildResources": "resources",
       "output": "release"
     },
-    "asarUnpack":[
+    "asarUnpack": [
       "app/public/**",
       "app/public/bin",
       "app/public/bin/phantom-macos",
